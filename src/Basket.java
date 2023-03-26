@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Basket {
+public class Basket implements Serializable {
     private final String[] products;
     private final int[] prices;
     private long[] cart;
@@ -15,7 +15,6 @@ public class Basket {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(textFile));
              BufferedReader reader1 = new BufferedReader(new FileReader(textFile))) {
-
             int size = 0;
             while (reader.readLine() != null) {
                 size++;
@@ -36,13 +35,19 @@ public class Basket {
         }
     }
 
+    public static Basket loadFromBinFile(File file) throws Exception {
+        FileInputStream input = new FileInputStream(file);
+        ObjectInputStream obj = new ObjectInputStream(input);
+        return (Basket) obj.readObject();
+
+    }
+
     public void addToCart(int productNum, int amount) {
         cart[productNum] += amount;
     }
 
     public void printCart() {
         long sum = 0;
-        System.out.println("Ваша корзина:");
         for (int i = 0; i < products.length; i++) {
             if (cart[i] != 0) {
                 long sumProduct = cart[i] * prices[i];
@@ -72,5 +77,12 @@ public class Basket {
 
     public int getPrice(int num) {
         return prices[num - 1];
+    }
+
+    public void saveBin(File file) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this);
+        oos.close();
     }
 }

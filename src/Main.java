@@ -7,31 +7,30 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        File list = new File("./Basket/basket.txt");
+        File listBin = new File("./basket.bin");
 
         String[] products = {"Витамины", "Хлеб", "Лимонад", "Курица", "Шоколад"};
         int[] prices = {50, 14, 80, 100, 90};
 
         Basket basket = new Basket(products, prices);
 
-        if (list.exists()) {
+
+        if (listBin.exists()) {
             try {
-                basket = Basket.loadFromTxtFile(list);
-            } catch (IOException e) {
-                e.printStackTrace();
+                basket = Basket.loadFromBinFile(listBin);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        } else {
-            basket = new Basket(products, prices);
         }
 
 
-        System.out.println("Список возможных товаров для :");
+        System.out.println("Список возможных товаров :");
         for (int i = 1; i <= basket.size(); i++) {
             System.out.println(i + ". " + basket.getProduct(i) + " " + basket.getPrice(i) + " руб/шт");
         }
         while (true) {
             int productNumber;
-            int productCount ;
+            int productCount;
             System.out.println("Выберите товар и количество или введите `end` для завершения");
             String input = scanner.nextLine();
             if ("end".equals(input)) {
@@ -61,6 +60,7 @@ public class Main {
                     continue;
                 }
                 basket.addToCart(productNumber, productCount);
+                basket.saveBin(listBin);
             }
         }
         basket.saveTxt(new File("basket.txt"));
