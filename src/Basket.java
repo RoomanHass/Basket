@@ -13,10 +13,9 @@ public class Basket implements Serializable {
 
     public static Basket loadFromTxtFile(File textFile) throws IOException {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(textFile));
-             BufferedReader reader1 = new BufferedReader(new FileReader(textFile))) {
+        try (BufferedReader reader1 = new BufferedReader(new FileReader(textFile))) {
             int size = 0;
-            while (reader.readLine() != null) {
+            while (reader1.readLine() != null) {
                 size++;
             }
 
