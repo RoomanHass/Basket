@@ -1,8 +1,11 @@
+import com.google.gson.Gson;
+
 import java.io.*;
 
-public class Basket {
-    private final String[] products;
-    private final int[] prices;
+public class Basket implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private String[] products;
+    private int[] prices;
     private long[] cart;
 
     public Basket(String[] products, int[] prices) {
@@ -11,28 +14,20 @@ public class Basket {
         this.cart = new long[products.length];
     }
 
-    public static Basket loadFromTxtFile(File textFile) throws IOException {
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
-
-            int size = 0;
-            while (reader.readLine() != null) {
-                size++;
+    public static Basket loadFromJSONFile(File file) throws IOException {
+        Basket basket;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            StringBuilder builder = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
             }
-
-            String[] products = new String[size];
-            long[] cart = new long[size];
-            int[] prices = new int[size];
-            for (int i = 0; i < size; i++) {
-                String[] parts = reader.readLine().split(" - ");
-                products[i] = parts[0];
-                cart[i] = Long.parseLong(parts[1]);
-                prices[i] = Integer.parseInt(parts[2]);
-            }
-            Basket basket = new Basket(products, prices);
-            basket.cart = cart;
-            return basket;
+            Gson gson = new Gson();
+            basket = gson.fromJson(builder.toString(), Basket.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        return basket;
     }
 
     public void addToCart(int productNum, int amount) {
@@ -53,12 +48,15 @@ public class Basket {
         System.out.println("Итого " + sum + " руб");
     }
 
-    public void saveTxt(File textFile) throws IOException {
-        try (PrintWriter out = new PrintWriter(textFile)) {
-            for (int i = 0; i < cart.length; i++) {
-                out.print(products[i] + " - " + cart[i] + " - " + prices[i]);
-            }
+    public void saveJSON(File file) throws IOException {
+        try (PrintWriter out = new PrintWriter(file)) {
+            Gson gson = new Gson();
+            String json = gson.toJson(this);
+            out.println(json);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     public long size() {
