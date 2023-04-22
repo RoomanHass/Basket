@@ -29,15 +29,18 @@ public class Main {
         for (int i = 1; i <= basket.size(); i++) {
             System.out.println(i + ". " + basket.getProduct(i) + " " + basket.getPrice(i) + " руб/шт");
         }
+
+        ClientLog log = new ClientLog();
+
         while (true) {
             int productNumber;
-            int productCount ;
+            int productCount;
             System.out.println("Выберите товар и количество или введите `end` для завершения");
             String input = scanner.nextLine();
             if ("end".equals(input)) {
                 System.out.println("Ваша корзина:");
                 basket.printCart();
-
+                log.exportAsCSV(new File("log.csv"));
                 break;
             } else {
                 String[] parts = input.split(" ");
@@ -61,6 +64,7 @@ public class Main {
                     continue;
                 }
                 basket.addToCart(productNumber, productCount);
+                log.log(productNumber, productCount);
             }
         }
         basket.saveTxt(new File("basket.txt"));

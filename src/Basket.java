@@ -13,8 +13,7 @@ public class Basket {
 
     public static Basket loadFromTxtFile(File textFile) throws IOException {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(textFile));
-             BufferedReader reader1 = new BufferedReader(new FileReader(textFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
 
             int size = 0;
             while (reader.readLine() != null) {
@@ -25,7 +24,7 @@ public class Basket {
             long[] cart = new long[size];
             int[] prices = new int[size];
             for (int i = 0; i < size; i++) {
-                String[] parts = reader1.readLine().split(" - ");
+                String[] parts = reader.readLine().split(" - ");
                 products[i] = parts[0];
                 cart[i] = Long.parseLong(parts[1]);
                 prices[i] = Integer.parseInt(parts[2]);
@@ -57,7 +56,7 @@ public class Basket {
     public void saveTxt(File textFile) throws IOException {
         try (PrintWriter out = new PrintWriter(textFile)) {
             for (int i = 0; i < cart.length; i++) {
-                out.println(products[i] + " - " + cart[i] + " - " + prices[i]);
+                out.print(products[i] + " - " + cart[i] + " - " + prices[i]);
             }
         }
     }
