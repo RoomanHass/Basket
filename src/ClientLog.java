@@ -14,6 +14,7 @@ public class ClientLog {
     public void exportAsCSV(File txtFile) throws IOException {
         if (!txtFile.exists()) {
             log.add(0, new String[]{"productNum, amount"});
+
         }
         try (CSVWriter writer = new CSVWriter(new FileWriter(txtFile, true))) {
             writer.writeAll(log);
