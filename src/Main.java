@@ -1,7 +1,5 @@
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.image.BufferStrategy;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -17,7 +15,7 @@ public class Main {
 
         SettingsReader settings = new SettingsReader(new File("shop.xml"));
         File loadFile = new File(settings.loadFile);
-        File saveFile = new File(settings.loadFile);
+        File saveFile = new File(settings.saveFile);
         File logFile = new File(settings.logFile);
 
         Basket basket = createBasket(loadFile, settings.isLoading, settings.loadFormat);
